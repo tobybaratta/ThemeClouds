@@ -1,3 +1,36 @@
+Metadata-Version: 2.4
+Name: themeclouds
+Version: 0.1.0
+Summary: A package for extracting themes from documents using LLMs
+Author: Joseph Colonel
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Text Processing :: Linguistic
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: openai>=1.0.0
+Requires-Dist: wordcloud>=1.9.0
+Requires-Dist: matplotlib>=3.5.0
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: flake8>=4.0.0; extra == "dev"
+Requires-Dist: mypy>=0.950; extra == "dev"
+Dynamic: author
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
 # ThemeClouds
 
 A Python package for extracting and analyzing themes from documents using Large Language Models (LLMs). This package processes text documents, identifies key themes using configurable LLM prompts, and creates visualizations of theme frequency.
@@ -13,22 +46,26 @@ A Python package for extracting and analyzing themes from documents using Large 
 
 ## Installation
 
-Install from source:
+```bash
+pip install theme-extractor
+```
+
+Or install from source:
 
 ```bash
 git clone <repository-url>
-cd ThemeClouds
+cd theme-extractor
 pip install -e .
 ```
 
 ## Quick Start
 
 ```python
-from themeclouds import ThemeExtractor
+from theme_extractor import ThemeExtractor
 import os
 
-# Download GGUF of your LLM of choice
-llm_path = "/your/llm/path"
+# Set your OpenAI API key
+os.environ["OPENAI_API_KEY"] = "your-api-key-here"
 
 # Sample documents
 documents = [
@@ -38,7 +75,7 @@ documents = [
 ]
 
 # Initialize and process
-extractor = ThemeExtractor(llm_path=llm_path)
+extractor = ThemeExtractor()
 theme_counts = extractor.process_documents(documents)
 
 # Generate visualizations
@@ -55,13 +92,29 @@ extractor.save_results("results/analysis.json")
 Create a `prompt_config.json` file to customize the prompts:
 
 ```python
-from themeclouds.utils import create_sample_config
+from theme_extractor.utils import create_sample_config
 
 # Generate sample configuration file
 create_sample_config("my_prompts.json")
 
 # Use custom configuration
 extractor = ThemeExtractor(prompt_config_path="my_prompts.json")
+```
+
+### Custom LLM Settings
+
+```python
+from theme_extractor import ThemeExtractor
+from theme_extractor.llm_interface import OpenAIInterface
+
+# Custom OpenAI settings
+llm = OpenAIInterface(
+    model="gpt-4",
+    max_retries=5,
+    delay_between_calls=2.0
+)
+
+extractor = ThemeExtractor(llm_interface=llm)
 ```
 
 ### Visualization Settings
@@ -80,7 +133,7 @@ extractor = ThemeExtractor(
 ## Package Structure
 
 ```
-themeclouds/
+theme_extractor/
 ├── __init__.py              # Package initialization
 ├── core.py                  # Main ThemeExtractor class
 ├── llm_interface.py         # LLM communication interfaces
@@ -95,7 +148,7 @@ themeclouds/
 ### Processing Large Document Collections
 
 ```python
-from themeclouds.utils import load_documents_from_file, preprocess_text
+from theme_extractor.utils import load_documents_from_file, preprocess_text
 
 # Load documents from file
 documents = load_documents_from_file("my_documents.txt")
@@ -113,7 +166,7 @@ results = extractor.process_documents(processed_docs)
 Extend the `LLMInterface` class to add support for other LLM providers:
 
 ```python
-from themeclouds.llm_interface import LLMInterface
+from theme_extractor.llm_interface import LLMInterface
 
 class CustomLLMInterface(LLMInterface):
     def generate_response(self, system_prompt: str, user_prompt: str) -> str:
@@ -170,7 +223,8 @@ Creates visualizations from theme frequency data.
 ## Requirements
 
 - Python 3.8+
-- Required packages: `llama_cpp_python`, `wordcloud`, `matplotlib`
+- OpenAI API key (for default LLM interface)
+- Required packages: `openai`, `wordcloud`, `matplotlib`
 
 ## Contributing
 
