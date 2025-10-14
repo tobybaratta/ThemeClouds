@@ -16,7 +16,7 @@ A Python package for extracting and analyzing themes from documents using Large 
 Install from source:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/linlab/ThemeClouds.git
 cd ThemeClouds
 pip install -e .
 ```
