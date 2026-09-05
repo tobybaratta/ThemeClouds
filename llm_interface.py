@@ -52,7 +52,7 @@ class LlamaCppInterface(LLMInterface):
     def generate_response(self, system_prompt: str, user_prompt: str) -> str:
         """Generate response using Llama.cpp."""
         # Format for Llama 3.3 Instruct
-        formatted_prompt = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>
+        formatted_prompt = f"""<|start_header_id|>system<|end_header_id|>
 
 {system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>
 
